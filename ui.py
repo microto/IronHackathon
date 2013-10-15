@@ -1,6 +1,6 @@
 from flask import Flask
 import flask
-from flask import render_template
+from flask import render_template, views
 from iptables_manager import IpTablesManager
 
 app = Flask(__name__)
