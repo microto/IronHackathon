@@ -1,5 +1,15 @@
 __author__ = 'tomerz'
 from requests import get
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
+from datetime import datetime, date
+from json import dumps
+from xml.etree import ElementTree
+
+
+#Defines
+AWS_ID = 'AKIAIUP2RDZ5ICKX2JRQ'
+AWS_PASS = 'rrQcsSEtweIAKtRw3WOzMBfOtFNQUPO6ncrALhcx'
 
 
 class IPService(object):
@@ -21,13 +31,23 @@ class DShield(IPService):
     DShield Service
     """
     def _request_ips(self):
-        pass
+        num_of_ips = 1000
+        today = date.today().isoformat()
+        req = get("http://www.dshield.org/api/topips/attacks/{0}/{1}".format(num_of_ips, today))
+        return req.content
 
     def _parse_ips(self):
-        pass
+        ips = list()
+
+        root = ElementTree.fromstring(self._request_ips())
+        for ipaddress in root.findall("ipaddress"):
+            source = ipaddress.find("source")
+            ips.append(".".join([num.lstrip('0') for num in source.text.split('.')]))
+
+        return ips
 
     def get_ips(self):
-        pass
+        return self._parse_ips()
 
 
 class TorStatus(IPService):
@@ -36,8 +56,7 @@ class TorStatus(IPService):
     """
     def _request_ips(self):
         req = get("http://torstatus.blutmagie.de/ip_list_all.php/Tor_ip_list_ALL.csv")
-        res = req.content
-        return res
+        return req.content
 
     def _parse_ips(self):
         res = self._request_ips()
@@ -61,7 +80,8 @@ class MaliciousIPS(ServiceTypes):
     Malicious IPS Collector
     """
     def get_ips(self):
-        pass
+        dshield = DShield()
+        return {self.__class__.__name__: dshield.get_ips()}
 
 
 class TorIPS(ServiceTypes):
@@ -79,16 +99,38 @@ class IronBlockIPS(ServiceTypes):
     """
     @staticmethod
     def get_ips():
-        tor_ips = TorIPS()
-        ips = tor_ips.get_ips()
+        #Create Ips Object
+        ips = dict()
+
+        #Create TorIPS Instance And Update
+        tor_ips = TorIPS().get_ips()
+        ips.update(tor_ips)
+
+        #Create MaliciousIPS Instance And Update
+        malicious_ips = MaliciousIPS().get_ips()
+        ips.update(malicious_ips)
+
+        #Create DateTime Instance And Update
+        ips.update({'DateTime': str(datetime.now())})
+
+        #Return Ips Object
         return ips
 
 
 def main():
     """
-    Test Function (Main)
+    Main Function
     """
-    print IronBlockIPS.get_ips()
+    conn = S3Connection(AWS_ID, AWS_PASS)
+    #Create Bucket If Needed
+    try:
+        conn.create_bucket('iron_block_ips')
+    finally:
+        bucket = conn.get_bucket("iron_block_ips")
+
+    key = Key(bucket)
+    key.key = 'blacklist_json'
+    key.set_contents_from_string(dumps(IronBlockIPS.get_ips()))
 
 if __name__ == "__main__":
     main()
