@@ -1,7 +1,7 @@
 from flask import Flask
 import flask
 from flask import render_template
-from MalliciousIPBlocker import IronBlockIPS
+from iptables_manager import IpTablesManager
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -13,7 +13,7 @@ class IronWeb(flask.views.MethodView):
         # return 'Hello World!'
         # blacklist = [{'ip' : '8.8.8.8/255.255.255.255'}]
         blacklist = []
-        o = IronBlockIPS()
+        o = IpTablesManager()
         res = o.get_blacklist()
         for item in res:
             blacklist.append(item)
@@ -22,7 +22,7 @@ class IronWeb(flask.views.MethodView):
 
     def post(self):
         #add to whitelist
-        ip = request.form['ip'];
+        ip = flask.request.form['ip']
         o = IronBlockIPS()
     	o.add_to_white_list(ip)
         pass
