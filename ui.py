@@ -1,7 +1,8 @@
 from flask import Flask
 import flask
 from flask import render_template
-# from security_groups_manager import IpTablesManager
+from MalliciousIPBlocker import IronBlockIPS
+
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -15,6 +16,8 @@ class IronWeb(flask.views.MethodView):
 
     def post(self):
         #add to whitelist
+        o = IronBlockIPS()
+        o.add_to_white_list()
         pass
 
 app.add_url_rule('/', view_func=IronWeb.as_view('main'), methods=['GET', 'POST'])
