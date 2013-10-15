@@ -14,7 +14,7 @@ class IpTablesManager(object):
     def add_ips_to_block_list(self, ips):
         counter = 0
         for ip in ips:
-            exists = blacklist.find({'IP': ip})
+            exists = blacklist.find_one({'IP': ip})
             if not exists:
                 subprocess.call('iptables -I INPUT -s {0} -j DROP'.format(ip), shell=True)
                 blacklist.insert({'IP': ip})
@@ -23,7 +23,7 @@ class IpTablesManager(object):
 
     def remove_ips_from_block_list(self, ips):
         for ip in ips:
-            subprocess.call('iptables -D INPUT {0}'.format(ip))
+            subprocess.call('iptables -D INPUT -s {0} -j DROP'.format(ip))
 
     def get_blacklist(self):
         return blacklist.find()
@@ -33,7 +33,7 @@ class IpTablesManager(object):
 
     def add_to_whitelist(self, ips):
         for ip in ips:
-            exists = blacklist.find({'IP': ip})
+            exists = blacklist.find_one({'IP': ip})
             if not exists:
                 whitelist.insert({'IP': ip})
 
@@ -44,7 +44,10 @@ class IpTablesManager(object):
 
     def flush(self, with_db=True):
         subprocess.call('iptables -t filter -F ', shell=True)
-        blacklist.remove()
+
+        if with_db:
+            blacklist.remove()
+            whitelist.remove()
 
 
 def main(*args, **kwargs):
