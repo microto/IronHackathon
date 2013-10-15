@@ -14,7 +14,7 @@ class IronWeb(flask.views.MethodView):
         # blacklist = [{'ip' : '8.8.8.8/255.255.255.255'}]
         blacklist = []
         o = IronBlockIPS()
-        res = o.get_black_list()
+        res = o.get_blacklist()
         for item in res:
             blacklist.append(item)
 
