@@ -20,11 +20,11 @@ class IronWeb(flask.views.MethodView):
 
         return render_template('ui.html', blacklist = blacklist)
 
-    def post(self,ip):
+    def post(self):
         #add to whitelist
+        ip = request.form['ip'];
         o = IronBlockIPS()
     	o.add_to_white_list(ip)
-
         pass
 
 app.add_url_rule('/', view_func=IronWeb.as_view('main'), methods=['GET', 'POST'])
