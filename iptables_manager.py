@@ -1,44 +1,56 @@
 __author__ = 'romanl'
 
-import iptc
-ADD_TEMPLATE = '{ip}/255.255.255.255'
+import subprocess
+import pymongo
+
+conn = pymongo.Connection()
+db = conn.iptables
+blacklist = db.blacklist
+whitelist = db.whitelist
 
 
 class IpTablesManager(object):
 
     def add_ips_to_block_list(self, ips):
-        import subprocess
         counter = 0
         for ip in ips:
-            subprocess.call('iptables -I INPUT -s {0} -j DROP'.format(ip), shell=True)
-            counter += 1
+            exists = blacklist.find({'IP': ip})
+            if not exists:
+                subprocess.call('iptables -I INPUT -s {0} -j DROP'.format(ip), shell=True)
+                blacklist.insert({'IP': ip})
+                counter += 1
         print 'Added {0} Rules to table'.format(counter)
-        #for chain_counter in xrange(len(ips)/500):
-        #    chain = iptc.Chain(iptc.Table(iptc.Table.FILTER), "INPUT")
-        # for ip in ips[chain_counter * 500:(chain_counter + 1) * 500]:
-
-                #rule = iptc.Rule()
-                #rule.in_interface = 'eth+'
-                #rule.src = ADD_TEMPLATE.format(ip=ip)
-                #target = iptc.Target(rule, 'DROP')
-                #rule.target = target
-                #chain.append_rule(rule=rule)
 
     def remove_ips_from_block_list(self, ips):
-        pass
+        for ip in ips:
+            subprocess.call('iptables -D INPUT {0}'.format(ip))
 
     def get_blacklist(self):
-        return self.rules
+        return blacklist.find()
 
     def get_whitelist(self):
-        pass
+        return whitelist.find()
+
+    def add_to_whitelist(self, ips):
+        for ip in ips:
+            exists = blacklist.find({'IP': ip})
+            if not exists:
+                whitelist.insert({'IP': ip})
+
+    def remove_from_whitelist(self, ips):
+
+        for ip in ips:
+            whitelist.remove({'IP': ip})
+
+    def flush(self, with_db=True):
+        subprocess.call('iptables -t filter -F ', shell=True)
+        blacklist.remove()
 
 
 def main(*args, **kwargs):
 
     mgr = IpTablesManager()
-    mgr.add_ips_to_block_list(['9.9.9.9'])
-    print [rule.src for rule in mgr.get_blacklist()]
+
 
 if __name__ == '__main__':
     main()
