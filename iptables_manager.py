@@ -24,6 +24,7 @@ class IpTablesManager(object):
     def remove_ips_from_block_list(self, ips):
         for ip in ips:
             subprocess.call('iptables -D INPUT -s {0} -j DROP'.format(ip))
+            blacklist.remove({'IP': ip})
 
     def get_blacklist(self):
         return blacklist.find()
