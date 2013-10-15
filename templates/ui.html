@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+  <head>
+    <title>IronWall Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="static/bootstrap/assets/js/html5shiv.js"></script>
+      <script src="static/bootstrap/js/respond.min.js"></script>
+    <![endif]-->
+
+   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+  </head>
+
+<body>
+<nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#">IronWall Admin</a>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">My Firewall Rules</a></li>
+      <li><a href="#">Firewall Updates</a></li>
+      <!--
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Action</a></li>
+          <li><a href="#">Another action</a></li>
+          <li><a href="#">Something else here</a></li>
+          <li><a href="#">Separated link</a></li>
+          <li><a href="#">One more separated link</a></li>
+        </ul>
+      </li>
+  	  -->
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#">Log Out</a></li>
+      <!--
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Action</a></li>
+          <li><a href="#">Another action</a></li>
+          <li><a href="#">Something else here</a></li>
+          <li><a href="#">Separated link</a></li>
+        </ul>
+      </li>
+  	  -->
+    </ul>
+  </div><!-- /.navbar-collapse -->
+</nav>
+<div id="content">
+
+{% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% else %}
+  <h1>Hello World!</h1>
+{% endif %}
+
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading"><h3>Black List</h3></div>
+  <div class="panel-body">
+    <p>These are the list of IP's that are blocked by your firewall. If you wish to not block any of the entries, simply click on the Add to whitelist link associated to the entry.</p>
+  </div>
+  <!-- Table -->
+  <table class="table">
+  	<thead>
+  		<tr>
+  			<th>#</th>
+  			<th>IP</th>
+  			<th>Action</th>
+  			<th>Country</th>
+  			<th>Blocks</th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		<tr>
+  			<td>1</td>
+  			<td>192.168.0.0</td>
+  			<td>Move to whitelist</td>
+  			<td>Argentina</td>
+  			<td>3,3443</td>
+  		<tr>
+  	</tbody>
+  </table>
+</div>
+
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading"><h3>White List</h3></div>
+  <div class="panel-body">
+    <p>These are the list of IP's that are allowed by your firewall. If you wish to block any of the entries, simply click on the Add to blacklist link associated to the entry.</p>
+  </div>
+  <!-- Table -->
+  <table class="table">
+  	<thead>
+  		<tr>
+  			<th>#</th>
+  			<th>IP</th>
+  			<th>Action</th>
+  			<th>Country</th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		<tr>
+  			<td>1</td>
+  			<td>192.168.0.0</td>
+  			<td>Move to whitelist</td>
+  			<td>Argentina</td>
+  		<tr>
+  	</tbody>
+  </table>
+</div>
+
+</div>
+
+
+</body>
+
+</html>
