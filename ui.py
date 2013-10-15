@@ -16,8 +16,7 @@ class IronWeb(flask.views.MethodView):
         o = IpTablesManager()
         res = o.get_blacklist()
         for item in res:
-            blacklist.append(item)
-
+            blacklist.append(item['IP'])
         return render_template('ui.html', blacklist = blacklist)
 
     def post(self):

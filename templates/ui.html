@@ -82,20 +82,16 @@
   			<th>#</th>
   			<th>IP</th>
   			<th>Action</th>
-  			<th>Country</th>
-  			<th>Blocks</th>
   		</tr>
   	</thead>
   	<tbody>
-  		<tr>
      	{% for item in blacklist %}
+		<tr>
 			<td>{{ loop.index }}</td>
-  			<td>{{ item['ip'] }}</td>
+  			<td>{{ item }}</td>
   			<td><a class="movetowhitelist" href="">Move To Whitelist</a></td>
-  			<td>Argentina</td>
-        	<td>0</td>
+		</tr>
     	{% endfor %}
-  		<tr>
   	</tbody>
   </table>
 </div>
