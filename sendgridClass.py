@@ -47,15 +47,15 @@ class sendgridClass(object):
 # Demo how to Use
 # ---------------
 
-mySendGrid = sendgridClass();
+#mySendGrid = sendgridClass();
 
-recipients = []
-recipients.append('korkile@gmail.com')
-recipients.append('or@ironsrc.com')
+#recipients = []
+#recipients.append('korkile@gmail.com')
+#recipients.append('or@ironsrc.com')
 
-ips = []
-ips.append('10.0.2.255')
-ips.append('10.1.2.255')
-ips.append('10.2.2.255')
+#ips = []
+#ips.append('10.0.2.255')
+#ips.append('10.1.2.255')
+#ips.append('10.2.2.255')
 
-mySendGrid.sendEmail(recipients,ips);
+#mySendGrid.sendEmail(recipients,ips);
