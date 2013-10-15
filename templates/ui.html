@@ -16,6 +16,7 @@
     <script src="//code.jquery.com/jquery.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="static/ui.js"></script>
   </head>
 
 <body>
@@ -68,13 +69,6 @@
 </nav>
 <div id="content">
 
-{% if name %}
-  <h1>Hello {{ name }}!</h1>
-{% else %}
-  <h1>Hello World!</h1>
-{% endif %}
-
-
 <div class="panel panel-default">
   <!-- Default panel contents -->
   <div class="panel-heading"><h3>Black List</h3></div>
@@ -94,11 +88,13 @@
   	</thead>
   	<tbody>
   		<tr>
-  			<td>1</td>
-  			<td>192.168.0.0</td>
-  			<td>Move to whitelist</td>
+     	{% for item in blacklist %}
+			<td>{{ loop.index }}</td>
+  			<td>{{ item['ip'] }}</td>
+  			<td><a class="movetowhitelist" href="">Move To Whitelist</a></td>
   			<td>Argentina</td>
-  			<td>3,3443</td>
+        	<td>0</td>
+    	{% endfor %}
   		<tr>
   	</tbody>
   </table>
@@ -127,7 +123,7 @@
   			<td>192.168.0.0</td>
   			<td>Move to whitelist</td>
   			<td>Argentina</td>
-  		<tr>
+  		</tr>
   	</tbody>
   </table>
 </div>
