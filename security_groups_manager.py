@@ -1,24 +1,34 @@
 __author__ = 'romanl'
 
-import boto
+import iptc
+ADD_TEMPLATE = '{ip}/255.255.255.255'
 
-class SecurityGroupManager(object):
-    def __init__(self, **kwargs):
-        super(object, self).__init__()
-        self._connection = kwargs['username']
+class IpTablesManager(object):
+    def __init__(self):
+        self._chain = iptc.Chain(iptc.Table(iptc.Table.FILTER), "INPUT")
+    def add_ips_to_block_list(self, ips):
+        #chain = iptc.Chain(iptc.Table(iptc.Table.FILTER), "INPUT")
+        for ip in ips:
+            rule = iptc.Rule()
+            rule.in_interface = 'eth+'
+            rule.src = ADD_TEMPLATE.format(ip=ip)
+            target = iptc.Target(rule, 'DROP')
+            rule.target = target
+            self._chain.insert_rule(rule=rule)
 
-    def add_ips_to_block_list(self, ips, security_groups=[]):
+    def remove_ips_from_block_list(self, ips):
         pass
 
-    def remove_ips_from_block_list(self, ips, security_groups=[]):
-        pass
+    def get_blacklist(self):
+        return self._chain.rules
 
-    def get_security_groups(self, with_ips=False):
+    def get_whitelist(self):
         pass
 
 
 def main(*args, **kwargs):
-    mgr = SecurityGroupManager()
+
+    mgr = IpTablesManager()
 
 if __name__ == '__main__':
     main()
