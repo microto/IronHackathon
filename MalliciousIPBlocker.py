@@ -1,11 +1,10 @@
 __author__ = 'tomerz'
 from requests import get
-from csv import reader
 
 
-class BlockedIPS(object):
+class IPService(object):
     """
-    Abstract Class
+    Services Abstract Class
     """
     def _request_ips(self):
         raise NotImplementedError("Should have implemented this")
@@ -17,21 +16,47 @@ class BlockedIPS(object):
         raise NotImplementedError("Should have implemented this")
 
 
-class DShield(BlockedIPS):
+class DShield(IPService):
     """
-    DShield Malicious IPS
+    DShield Service
     """
-    pass
+    def _request_ips(self):
+        pass
+
+    def _parse_ips(self):
+        pass
+
+    def get_ips(self):
+        pass
 
 
-class TorStatus(BlockedIPS):
+class TorStatus(IPService):
     """
-    Tor Malicious IPS
+    Tor Status Service
     """
-    pass
+    def _request_ips(self):
+        req = get("http://torstatus.blutmagie.de/ip_list_all.php/Tor_ip_list_ALL.csv")
+        res = req.content
+        return res
+
+    def _parse_ips(self):
+        res = self._request_ips()
+        return res.split("\n")
+
+    def get_ips(self):
+        filtered_res = filter(None, self._parse_ips())
+        return filtered_res
 
 
-class MaliciousIPS(object):
+class ServiceTypes(object):
+    """
+    Service Types Abstract Class
+    """
+    def get_ips(self):
+        raise NotImplementedError("Should have implemented this")
+
+
+class MaliciousIPS(ServiceTypes):
     """
     Malicious IPS Collector
     """
@@ -39,11 +64,31 @@ class MaliciousIPS(object):
         pass
 
 
-def main():
-    req = get("http://torstatus.blutmagie.de/ip_list_exit.php/Tor_ip_list_EXIT.csv")
-    res = req.content
+class TorIPS(ServiceTypes):
+    """
+    Tor IPS Collector
+    """
+    def get_ips(self):
+        tor_status = TorStatus()
+        return {self.__class__.__name__: tor_status.get_ips()}
 
-    print res
+
+class IronBlockIPS(ServiceTypes):
+    """
+    IronBlock Collector
+    """
+    @staticmethod
+    def get_ips():
+        tor_ips = TorIPS()
+        ips = tor_ips.get_ips()
+        return ips
+
+
+def main():
+    """
+    Test Function (Main)
+    """
+    print IronBlockIPS.get_ips()
 
 if __name__ == "__main__":
     main()
