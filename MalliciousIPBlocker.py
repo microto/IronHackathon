@@ -5,11 +5,13 @@ from boto.s3.key import Key
 from datetime import datetime, date
 from json import dumps
 from xml.etree import ElementTree
-
+from time import sleep
 
 #Defines
 AWS_ID = 'AKIAIUP2RDZ5ICKX2JRQ'
 AWS_PASS = 'rrQcsSEtweIAKtRw3WOzMBfOtFNQUPO6ncrALhcx'
+#Update Interval In Minutes
+UPDATE_INTERVAL = 30
 
 
 class IPService(object):
@@ -117,6 +119,16 @@ class IronBlockIPS(ServiceTypes):
         return ips
 
 
+def get_ips_length(ip_dicts):
+    size = 0
+    val = ip_dicts.values()
+
+    for i in range(len(val) - 1):
+        size += len(val[i])
+
+    return size
+
+
 def main():
     """
     Main Function
@@ -130,7 +142,12 @@ def main():
 
     key = Key(bucket)
     key.key = 'blacklist_json'
-    key.set_contents_from_string(dumps(IronBlockIPS.get_ips()))
+
+    while True:
+        iron_ips = IronBlockIPS.get_ips()
+        key.set_contents_from_string(dumps(iron_ips))
+        print '{0}\t=>\tUpdated {1} IPs.'.format(datetime.now(), get_ips_length(iron_ips))
+        sleep(UPDATE_INTERVAL * 60)
 
 if __name__ == "__main__":
     main()
