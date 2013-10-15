@@ -11,13 +11,20 @@ class IronWeb(flask.views.MethodView):
     def get(self):
         # post request to server to get ip blacklist
         # return 'Hello World!'
-        blacklist = [{'ip' : '8.8.8.8/255.255.255.255'}]
+        # blacklist = [{'ip' : '8.8.8.8/255.255.255.255'}]
+        blacklist = []
+        o = IronBlockIPS()
+        res = o.get_black_list()
+        for item in res:
+            blacklist.append(item)
+
         return render_template('ui.html', blacklist = blacklist)
 
-    def post(self):
+    def post(self,ip):
         #add to whitelist
         o = IronBlockIPS()
-        o.add_to_white_list()
+    	o.add_to_white_list(ip)
+
         pass
 
 app.add_url_rule('/', view_func=IronWeb.as_view('main'), methods=['GET', 'POST'])
