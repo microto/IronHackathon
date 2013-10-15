@@ -1,5 +1,5 @@
 from MalliciousIPBlocker import IronBlockIPS
-from security_groups_manager import IpTablesManager
+from iptables_manager import IpTablesManager
 
 class IronWall(object):
     def __init__(self):
@@ -10,7 +10,7 @@ class IronWall(object):
         print "Adding %s ips" % len(self.ips['TorIPS'])
         mgr = IpTablesManager()
         mgr.add_ips_to_block_list(self.ips['TorIPS'])
-        print [rule.src for rule in mgr.get_blacklist()]
+        #print [rule.src for rule in mgr.get_blacklist()]
 
 if __name__ == "__main__":
     o = IronWall()
