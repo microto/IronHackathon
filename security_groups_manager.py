@@ -29,6 +29,8 @@ class IpTablesManager(object):
 def main(*args, **kwargs):
 
     mgr = IpTablesManager()
+    mgr.add_ips_to_block_list(['9.9.9.9'])
+    print [rule.src for rule in mgr.get_blacklist()]
 
 if __name__ == '__main__':
     main()
