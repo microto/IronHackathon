@@ -5,8 +5,8 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
 #Defines
-AWS_ID = 'AKIAIUP2RDZ5ICKX2JRQ'
-AWS_PASS = 'rrQcsSEtweIAKtRw3WOzMBfOtFNQUPO6ncrALhcx'
+AWS_ID = ''
+AWS_PASS = ''
 
 
 class IronWall(object):
